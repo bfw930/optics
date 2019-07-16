@@ -1,0 +1,17 @@
+
+
+Impliment standalone database package
+
+Static data storage with operational layer and search / caching
+
+
+
+structure - core database structure; nodes and relations; generation
+
+interface - update of database instance; CRUD nodes and relations; use structure
+
+search - relational search database instance; depends structure; use interface
+
+store - database static storage; use by search, interface; enable sharding, caching
+
+operate - common process orchestration; use interface, search, store
