@@ -41,7 +41,7 @@
 
         points = refraction(C, r, e, L0, v, n1, n2, rev)
 
-        paths = get_paths(rays, opts, n0 = 1.0)
+        path = get_path(rays, opts, n0 = 1.0)
 
 '''
 
@@ -296,7 +296,7 @@ def refraction(C, r, e, L0, v, n1, n2, rev):
 
 
 
-def get_paths(rays, opts, n0 = 1.0):
+def get_path(ray, opts, n0):
 
     ''' Calculate Ray Path through Optics
 
@@ -311,67 +311,58 @@ def get_paths(rays, opts, n0 = 1.0):
         (list of list pair np.array[3,1]): list of intercept vector pairs (point and direction unit vector)
     '''
 
-    paths = []
+    # set initial refractive index
+    n1 = n0
 
-    # iterate over rays
-    for i in range(len(rays)):
+    # get origin ray position and direction vector
+    L0 = ray[:3]
+    v = ray[3:]
 
-        # set initial refractive index
-        n1 = n0
+    path = []
 
-        # get origin ray position and direction vector
-        L0 = rays[i][:3]
-        v = rays[i][3:]
-
-        path = []
-
-        # store initial ray path details
-        path.append([L0, v])
+    # store initial ray path details
+    path.append([L0, v])
 
 
-        # iterate over optics in path
-        for optic in opts:
+    # iterate over optics in path
+    for optic in opts:
 
-            # get optic (ellipsoid): centre, radius, axes scale, refractive index, reverse flag
-            C = optic['centre']
-            r = optic['radius']
-            e = optic['scale']
-            n2 = optic['opt_den']
-            rev = optic['rev']
-
-
-            # for intercept ray with optic, get new refracted ray
-            ray = refraction(C, r, e, L0, v, n1, n2, rev)
+        # get optic (ellipsoid): centre, radius, axes scale, refractive index, reverse flag
+        C = optic['centre']
+        r = optic['radius']
+        e = optic['scale']
+        n2 = optic['opt_den']
+        rev = optic['rev']
 
 
-            # if refracted ray, unpack
-            if ray is not None:
-
-                # check which side intersection is wanted
-                if rev:
-                    p, V = ray[0]
-                else:
-                    p, V = ray[1]
+        # for intercept ray with optic, get new refracted ray
+        _ray = refraction(C, r, e, L0, v, n1, n2, rev)
 
 
-                # store ray path details
-                path.append([p, V])
+        # if refracted ray, unpack
+        if _ray is not None:
 
-
-                # update new ray start
-                n1 = n2
-                v = V
-                L0 = p
-
-            # if not refracted ray, terminate path
+            # check which side intersection is wanted
+            if rev:
+                p, V = _ray[0]
             else:
-                break
+                p, V = _ray[1]
 
 
-        # store full ray path
-        paths.append(path)
+            # store ray path details
+            path.append([p, V])
 
 
-    # return list of ray paths
-    return paths
+            # update new ray start
+            n1 = n2
+            v = V
+            L0 = p
+
+        # if not refracted ray, terminate path
+        else:
+            break
+
+
+    # return full ray path
+    return path
 

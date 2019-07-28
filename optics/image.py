@@ -22,6 +22,10 @@
 
 ''' Imports '''
 
+# path tracing
+from .engine import get_path
+
+
 # nd array manipulation
 import numpy as np
 
@@ -30,7 +34,6 @@ import PIL
 
 # image manipulation
 from scipy import ndimage
-
 
 
 
@@ -243,6 +246,40 @@ def gen_rev_rays(paths, opt_params):
 
     # return generated reverse rays
     return back_rays
+
+
+
+def get_paths(rays, opts, n0 = 1.0):
+
+    ''' Calculate Ray Paths
+
+        Given rays and optics lists, calculate full ray path through optics, return all intercept points and vectors
+
+    Args:
+        rays (list of np.array[3,1]): list of ray starting points
+        optics (list of dict(optics)): list of optics in path with parameters for each
+        n0 (float): initial index of refraction at ray start location; default to air (1.0)
+
+    Returns:
+        (list of list pair np.array[3,1]): list of intercept vector pairs (point and direction unit vector)
+    '''
+
+    paths = []
+
+    # iterate over rays
+    for i in range(len(rays)):
+
+        # get full ray path through optics chain via ray tracing engine calculation
+        path = get_path(rays[i], opts, n0)
+
+        # store full ray path
+        paths.append(path)
+
+
+    # return list of ray paths
+    return paths
+
+
 
 
 

@@ -37,7 +37,7 @@ def gen_optics(params):
 
     ''' Generate Standard Optics
 
-    Given set of variable parameters, generate and define parameters of each optics element in path0...........................................................................
+    Given set of variable parameters, generate and define parameters of each optics element in path
 
     Args:
         eye_dist (float): distance from image to cornea front surface

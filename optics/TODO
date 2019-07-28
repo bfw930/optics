@@ -8,6 +8,8 @@ optical model
 
 	refine required variable parameters within optical model for each defined optical test
 
+	update reverse optics as delta of initial parameter rather than new value
+
 
 ray-tracing engine
 
@@ -26,6 +28,8 @@ image translation
 
 	develop batch process for image database generation for a given optical test; generate initial image batches
 
+
+	look into transformation mapping using approximate function rather than implicit ray tracing
 
 
 
