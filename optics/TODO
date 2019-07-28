@@ -16,6 +16,8 @@ ray-tracing engine
 
 	accurately impliment rotation for optical element rotation, enable optical axis parameter for front cornea
 
+	improve efficiency of reverse ray calculation
+
 
 image translation
 
@@ -23,3 +25,85 @@ image translation
 	image; reduce number of required rays based on image distance and size;
 
 	develop batch process for image database generation for a given optical test; generate initial image batches
+
+
+
+
+
+'''
+
+    import test image and supersample (1 px to 9 rays) initial positions
+
+    define standard optical parameters
+
+    calculate ray paths, final retinal image locations
+
+    store retinal pixel map at standard optics
+
+
+    adjust optical parameters for stigmatism
+
+    set initial ray locations as standard retinal image
+
+    calculate ray paths in reverse (retina to image location)
+
+    save pixel map for optical configuration
+
+
+    use pixel map to subsample over image grid, generate image pixels from average of standard pixels
+
+
+    build database of pixel maps for given range and step of optical parameters each stigmatism
+
+    generate image translation suit for given input image (greyscale) using pixel maps (parameter dependent)
+
+'''
+
+
+
+
+## import test image
+
+
+
+## get mapping of test image to initial ray points
+
+
+# define length of image dimensions (allow scale of image, bin average pixels per region)
+# uniform divide pixels into spatial map of initial ray y,z coordinates
+
+
+
+
+## calculate retinal projection of image, mapping of image to retina
+
+
+
+
+## display retinal image projection: wide focus and fovea zoom
+
+
+
+
+## generate inverted optics chain (ray start retinal image mapping)
+
+
+
+## reverse path trace retinal image back to origin
+
+#### confirm accurate mapping to original image
+
+
+
+## vary optics parameters in forward / reverse optics chain, compare image to retinal image mapping, distortion
+
+
+
+## develop methodology to recreate perceptive refraction image for clinical testing
+# test image baseline retinal mapping
+# inverse optic parameter variation through reverse optics chain
+# generate perceptive distortion image for display
+
+
+## generate test image sweep over parameter space for distorted image set
+
