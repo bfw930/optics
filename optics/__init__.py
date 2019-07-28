@@ -9,17 +9,13 @@ from .engine import *
 ''' development only - direct access to module functions '''
 
 '''
-
 # functions
-from .operate import *
-from .interface import *
-from .structure import *
+from .engine import *
 
 '''
 
 '''
-
 # module
-from . import module
+from . import engine
 
 '''

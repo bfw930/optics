@@ -1,17 +1,25 @@
 
-
-Impliment standalone database package
-
-Static data storage with operational layer and search / caching
+outstanding development requirements
 
 
+optical model
 
-structure - core database structure; nodes and relations; generation
+	define and develop translation from optical model parameters to clinical prescription
 
-interface - update of database instance; CRUD nodes and relations; use structure
+	refine required variable parameters within optical model for each defined optical test
 
-search - relational search database instance; depends structure; use interface
 
-store - database static storage; use by search, interface; enable sharding, caching
+ray-tracing engine
 
-operate - common process orchestration; use interface, search, store
+	update ellipsiod refraction calculation (ray-ellipsoid intersection point) to use complete separation of
+	transformation matricies for translation, rotation, and scale; test to ensure accuracy
+
+	accurately impliment rotation for optical element rotation, enable optical axis parameter for front cornea
+
+
+image translation
+
+	improve efficiency of image translation process; overhaul subsampling and pixel binning given only greyscale
+	image; reduce number of required rays based on image distance and size;
+
+	develop batch process for image database generation for a given optical test; generate initial image batches
