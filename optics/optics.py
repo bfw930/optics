@@ -4,11 +4,19 @@
     optical model definition and generation functions
 
 
+### helper function to generate full optics chain (list of dicts with parameters) from minimal input parameter set
+## have relative distance of optics
+
+## include parameter variation aligned to optical aberations (prescription), eg retinal distance, cornea ashpericity
+
+
     functions:
 
         opts = gen_optics(params)
 
         opts = gen_optics_rev(params)
+
+        opt_params = std_opt_params()
 
 '''
 
@@ -23,14 +31,47 @@ import numpy as np
 
 ''' Optics Chain Generation Functions '''
 
+def std_opt_params():
 
-### helper function to generate full optics chain (list of dicts with parameters) from minimal input parameter set
-## have relative distance of optics
+    ''' Standard Optics Parameters
 
-## include parameter variation aligned to optical aberations (prescription), eg retinal distance, cornea ashpericity
+    Args:
 
+    Returns:
+        (dict): standard optical parameters
+    '''
 
-## standard optics system
+    # define standard eye parameters
+    opt_params = {
+        'eye_front': 300.,
+
+        'cornea_sph': 1.,
+        'cornea_axis': 0.,
+
+        'cornea_pow': np.sqrt(0.5),
+        'cornea_f_rad': 7.8,
+        'cornea_r_rad': 6.4,
+        'cornea_thick': 0.6,
+        'aqueous_thick': 3.0,
+
+        'iris_dia': 4.,
+
+        'lens_thick': 4.,
+        'lens_f_rad_max': 10.1,
+        'lens_f_rad_min': 5.95,
+        'lens_r_rad_max': 6.1,
+        'lens_r_rad_min': 4.5,
+
+        'focus': 1.,
+
+        'lens_pow': np.sqrt(4.5),
+
+        'retina_thick': 17.2,
+        'retina_rad': 12.5,
+    }
+
+    # return standard optical parameters
+    return opt_params
 
 
 def gen_optics(params):
@@ -146,8 +187,6 @@ def gen_optics(params):
 
     # return optics chain
     return opts
-
-
 
 
 

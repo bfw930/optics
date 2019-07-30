@@ -37,36 +37,6 @@ from scipy import ndimage
 
 
 
-'''
-
-D is dioptre at 1/m
-optical power of lens, reciprocal of focal length
-
-
-Myopia / Hyperopia
-
-    long / short eyeball (cornea to retnia?), range -8.0 D to +8.0 D
-
-    target ~ +- 3.0 D at 0.25 D step
-
-
-Astigmatism
-
-    cornea surface asymmetry, axis for rotation, range -5.0 D
-
-    target ~ 3.0 D at 0.25 D step, axis over +-90 degrees at 1 degrees step
-
-
-Presbyopia
-
-    limit in lens focusing ability (close range), range +3.5 D
-
-    target ~ 3.5 D in 0.25 D step
-
-'''
-
-
-
 ''' test image preparation '''
 
 def import_image(path, edge_len):
@@ -143,6 +113,10 @@ def gen_image(edge_len, style = 'target'):
     patt[np.where(patt < .5)] = 0.
 
 
+    # smooth edges for low res
+    patt = ndimage.gaussian_filter(patt, sigma = 1.)
+
+
     print(patt.shape[0]**2)
 
     # return generated pattern image
@@ -152,7 +126,7 @@ def gen_image(edge_len, style = 'target'):
 
 ''' image fransformation functions '''
 
-def gen_img_rays(edge_len, height, ss = 1.0):
+def gen_img_rays(edge_len, height, test_image, ss = 1.0):
 
     ''' Generate Rays from Image
 
@@ -168,10 +142,6 @@ def gen_img_rays(edge_len, height, ss = 1.0):
     '''
 
     rays = []
-
-    # set height of target image (mm)
-    #height = 30.
-    height = 5.
 
     # calculate ray initial positions
     rng = height / 2
@@ -195,6 +165,22 @@ def gen_img_rays(edge_len, height, ss = 1.0):
     # print number of rays and confirm edge length correct
     print( int(np.sqrt(len(rays))) )
     print( int(len(rays)) )
+
+
+    # discard background (white) rays
+    if True:
+
+        # get image pixel value to ray map
+        img_map = ndimage.zoom(test_image, (((test_image.shape[0] - 1) * ss) + 1) / test_image.shape[0]).flatten()
+
+        # filter rays for black pixels only by threshold
+        k = np.where(img_map > .85)[0]
+
+        # strip background rays
+        rays = [ rays[i] for i in k ]
+
+        # print number of rays
+        print( int(len(rays)) )
 
 
     # return list of generated rays
@@ -281,13 +267,13 @@ def get_paths(rays, opts, n0 = 1.0):
 
 
 
-
-
 def translate_image(test_image, ss, paths, rev_paths, height, edge_len):
 
     ''' Resample Translated Rays as Image
 
         Supersample image, get map of pixel to ray, average ray colour per pixel bin to generate image
+
+            UPDATE: now for only bright pixels as rays, no image map here, only area median and gaussian smooth
 
     Args:
         paths (list): initial ray paths through optics chain to retina
@@ -297,10 +283,10 @@ def translate_image(test_image, ss, paths, rev_paths, height, edge_len):
     '''
 
     # get index of only rays that reach retina
-    j = [ i for i in range(len(paths)) if len(paths[i]) == 7 ]
+    #j = [ i for i in range(len(paths)) if len(paths[i]) == 7 ]
 
     # supersample image, get map of image pixel colour to each ray
-    img_map = ndimage.zoom(test_image, (((test_image.shape[0] - 1) * ss) + 1) / test_image.shape[0]).flatten()[j]
+    #img_map = ndimage.zoom(test_image, (((test_image.shape[0] - 1) * ss) + 1) / test_image.shape[0]).flatten()[j]
 
 
     # get retinal image
@@ -334,8 +320,18 @@ def translate_image(test_image, ss, paths, rev_paths, height, edge_len):
 
             # average rays in pixel bin by image value
             if len(k[0]) > 0:
-                #grid[j,i] = np.mean(img_map[k][:])
-                grid[j,i] = np.median(img_map[k][:])
+                #grid[j,i] = np.median(img_map[k][:])
+
+                # sum pixels in bin over bin area
+                grid[j,i] = np.sum([ 1 for _ in range(len(k[0])) ]) / (ss**2)
+                #grid[j,i] = 1.
+
+
+    # smooth edges for low res
+    grid = ndimage.gaussian_filter(grid, sigma = 1.)
+
+    # normalise image magnitude
+    grid = grid / np.max(grid)
 
 
     # return generated image array

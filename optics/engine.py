@@ -6,7 +6,6 @@
 
 
 
-
     chain of optics as functions in spatial dimensions
     rays cast from image source
 
@@ -28,6 +27,18 @@
         Need to extent initial ray positions for additional dimension
 
 
+
+### Path Tracing Orchestration Functions
+
+## store points for initial and each intercept with direction unit vector
+
+# build array of initial ray locations with direction vectors
+
+# define optics in path
+
+# calculate full path of each individual ray through optics chain, save path details
+
+## finally plot optics and rays for display, use ray path details to build
 
 
 
@@ -219,19 +230,6 @@ def get_refracted_vector(n1, n2, N, v):
 
 
 ''' Path Tracing Orchestration Functions '''
-
-
-## store points for initial and each intercept with direction unit vector
-
-# build array of initial ray locations with direction vectors
-
-# define optics in path
-
-# calculate full path of each individual ray through optics chain, save path details
-
-## finally plot optics and rays for display, use ray path details to build
-
-
 
 def refraction(C, r, e, L0, v, n1, n2, rev):
 

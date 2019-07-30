@@ -66,6 +66,19 @@ image translation
 
 
 
+
+import image, scale
+subsample image, generate rays
+define standard optics
+calculate paths, retinal image
+define altered parameter range
+calculate reverse paths
+resample translated image, save
+
+
+
+
+
 ## import test image
 
 
