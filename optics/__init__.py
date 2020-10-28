@@ -9,10 +9,12 @@ from .image import import_image, gen_image
 from .image import gen_img_rays, gen_rev_rays, get_paths, translate_image
 
 # batch image generation protocols
-from .batch import batch_image_gen
+from .batch import init_optics, batch_translate, store_images
+
 
 # helper display functions
 from .display import plot_3d_ellipsoid, plot_3d_line
+
 
 
 

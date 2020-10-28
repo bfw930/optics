@@ -144,6 +144,7 @@ def gen_optics(params):
             'scale': np.array([cornea_pow, cornea_sph, 1.]),
             'radius': cornea_f_rad,
             'rev': False,
+            'theta': cornea_axis,
         },
         { # aqueous
             'centre': np.array([cornea_r_dist, 0., 0.]),
@@ -151,6 +152,7 @@ def gen_optics(params):
             'scale': np.array([1., 1., 1.]),
             'radius': cornea_r_rad,
             'rev': False,
+            'theta': 0.,
         },
         { # iris
             'centre': np.array([iris_dist, 0., 0.]),
@@ -158,6 +160,7 @@ def gen_optics(params):
             'scale': np.array([np.sqrt(1e-6), 1., 1.]),
             'radius': iris_dia / 2.,
             'rev': False,
+            'theta': 0.,
         },
         { # lens front
             'centre': np.array([lens_f_dist, 0., 0.]),
@@ -165,6 +168,7 @@ def gen_optics(params):
             'scale': np.array([1., 1., 1.]),
             'radius': lens_f_rad,
             'rev': False,
+            'theta': 0.,
         },
         { # lens rear
             'centre': np.array([lens_r_dist, 0., 0.]),
@@ -172,6 +176,7 @@ def gen_optics(params):
             'scale': np.array([lens_pow, 1., 1.]),
             'radius': lens_r_rad,
             'rev': True,
+            'theta': 0.,
         },
         { # retina
             'centre': np.array([retina_dist, 0., 0.]),
@@ -179,6 +184,7 @@ def gen_optics(params):
             'scale': np.array([1., 1., 1.]),
             'radius': retina_rad,
             'rev': True,
+            'theta': 0.,
         },
 
     ]
@@ -261,6 +267,7 @@ def gen_optics_rev(params):
             'scale': np.array([lens_pow, 1., 1.]),
             'radius': lens_r_rad,
             'rev': False,
+            'theta': 0.,
         },
         { # lens front
             'centre': np.array([lens_f_dist, 0., 0.]),
@@ -268,6 +275,7 @@ def gen_optics_rev(params):
             'scale': np.array([1., 1., 1.]),
             'radius': lens_f_rad,
             'rev': True,
+            'theta': 0.,
         },
         { # aqueous
             'centre': np.array([cornea_r_dist, 0., 0.]),
@@ -275,6 +283,7 @@ def gen_optics_rev(params):
             'scale': np.array([1., 1., 1.]),
             'radius': cornea_r_rad,
             'rev': True,
+            'theta': 0.,
         },
         { # cornea
             'centre': np.array([cornea_f_dist, 0., 0.]),
@@ -282,6 +291,7 @@ def gen_optics_rev(params):
             'scale': np.array([cornea_pow, cornea_sph, 1.]),
             'radius': cornea_f_rad,
             'rev': True,
+            'theta': cornea_axis,
         },
         { # image
             'centre': np.array([image_dist, 0., 0.]),
@@ -289,6 +299,7 @@ def gen_optics_rev(params):
             'scale': np.array([np.sqrt(1e-6), 1., 1.]),
             'radius': 50.,
             'rev': True,
+            'theta': 0.,
         },
 
     ]

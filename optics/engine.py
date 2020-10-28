@@ -72,7 +72,7 @@ import numpy as np
 
 ''' Core Path Tracing Calculation Functions '''
 
-def get_intercept(C, r, e, L0, v):
+def get_intercept(C, r, e, L0, v, theta):
 
     ''' Get Intercept of Line and Ellipsoid
 
@@ -87,6 +87,8 @@ def get_intercept(C, r, e, L0, v):
 
         L0 (np.array[3,1]): line origin point
         v (np.array[3,1]): line direction unit vector
+
+        theta (float): rotation angle in degrees about primary axis
 
     Returns:
         (list of np.array[3,1]): list of line-ellipsoid intercept point(s)
@@ -104,27 +106,28 @@ def get_intercept(C, r, e, L0, v):
     T = np.identity(4)
     T[:-1,-1:] = C
 
+    # Rotation Matrix
 
-## fix rotation if required in future
+    # generate rotation matrix from angle theta (deg.) around primary axis
+    theta = np.deg2rad(theta)
+    rotate = np.array([
+        [1,0,0],
+        [0, np.cos(theta), -np.sin(theta)],
+        [0, np.sin(theta), np.cos(theta)]
+    ])
 
-    # Rotation/Scale Matrix ?
+    # Rotation Matrix
     R = np.identity(4)
-    R[:-1,:-1] = np.identity(3) * np.array(e).T
+    #R[:-1,:-1] = rotate
+####
 
-    a = np.array([[1., 0., 0.]]).T# * e[0]
-    b = np.array([[0., 1., 0.]]).T# * e[1]
-    c = np.array([[0., 0., 1.]]).T# * e[2]
-
-
-    # Scale/Rotate Matrix ?
-    #S = np.identity(4)
-    #S[0,0] = np.linalg.norm(a)
-    #S[1,1] = np.linalg.norm(b)
-    #S[2,2] = np.linalg.norm(c)
+    # Scale Matrix
+    S = np.identity(4)
+    S[:-1,:-1] = np.identity(3) * np.array(e).T
 
 
     # Transformation Matrix
-    M = T @ R #@ S
+    M = T @ R @ S
 
 
     # rescaled sphere centre
@@ -231,7 +234,7 @@ def get_refracted_vector(n1, n2, N, v):
 
 ''' Path Tracing Orchestration Functions '''
 
-def refraction(C, r, e, L0, v, n1, n2, rev):
+def refraction(C, r, e, L0, v, n1, n2, rev, theta):
 
     ''' Calculate Ellipsoid-Ray Intercept Point(s) and Refraction Vector(s)
 
@@ -242,6 +245,7 @@ def refraction(C, r, e, L0, v, n1, n2, rev):
         r (float): ellipsoid radius
         e (np.array[3,1]): ellipsoid dimensional scaling factors
         rev (bool): reverse flag for ellipse intercept surface (front / rear) along primary axis
+        theta (float): rotation angle in degrees about primary axis
 
         L0 (np.array[3,1]): line origin point
         v (np.array[3,1]): line direction unit vector
@@ -254,7 +258,7 @@ def refraction(C, r, e, L0, v, n1, n2, rev):
     '''
 
     # calculate ray ellipsoid intersection
-    icepts = get_intercept(C, r, e, L0, v)
+    icepts = get_intercept(C, r, e, L0, v, theta)
 
 
     # only calculate refraction for intersections (exclude tangents)
@@ -331,10 +335,11 @@ def get_path(ray, opts, n0):
         e = optic['scale']
         n2 = optic['opt_den']
         rev = optic['rev']
+        theta = optic['theta']
 
 
         # for intercept ray with optic, get new refracted ray
-        _ray = refraction(C, r, e, L0, v, n1, n2, rev)
+        _ray = refraction(C, r, e, L0, v, n1, n2, rev, theta)
 
 
         # if refracted ray, unpack

@@ -92,32 +92,54 @@ def gen_image(edge_len, style = 'target'):
     zero = np.array([ [ 0. for xi in grid[0] ] for yi in grid[1] ])
 
 
-    # set target origin
-    orig = np.array([0., 0.])
+    if style == 'target':
 
-    # calculate distance map
-    dist = np.array([ [ np.sqrt(sum((np.array([xi, yi])-orig)**2)) for xi in grid[0] ] for yi in grid[1] ])
+        # set target origin
+        orig = np.array([0., 0.])
 
-
-    # generate pattern from distance map
-    patt = (np.cos(dist * 5 * 2 * np.pi) + 1.) / 2.0
+        # calculate distance map
+        dist = np.array([ [ np.sqrt(sum((np.array([xi, yi])-orig)**2)) for xi in grid[0] ] for yi in grid[1] ])
 
 
-    # trim edges
-    patt[np.where(dist >= 0.9)] = 0.
-    patt[np.where(dist <= 0.1)] = 0.
+        # generate pattern from distance map
+        patt = (np.cos(dist * 8 * 2 * np.pi) + 1.) / 2.0
 
 
-    # tophat floor/ciel filter for pattern
-    patt[np.where(patt >= .5)] = 1.
-    patt[np.where(patt < .5)] = 0.
+        # trim edges
+        patt[np.where(dist >= 0.7)] = 0.
+        patt[np.where(dist <= 0.1)] = 0.
 
 
-    # smooth edges for low res
-    patt = ndimage.gaussian_filter(patt, sigma = 1.)
+        # tophat floor/ciel filter for pattern
+        patt[np.where(patt >= .5)] = 1.
+        patt[np.where(patt < .5)] = 0.
 
 
-    print(patt.shape[0]**2)
+        # smooth edges for low res
+        patt = ndimage.gaussian_filter(patt, sigma = 1.)
+
+
+    elif style == 'grid' :
+
+        # set grid line spacing
+        #k = 15
+        k = int((edge_len - 1)/20)
+        # set grid line thickness
+        t = int(np.floor(k/10))
+
+        # generate full grid
+        for i in range(2*k, edge_len - 2*k):
+            for j in range(2*k, edge_len - 2*k):
+                if (i % k <= t) or(i % k >= k-t) or (j % k <= t) or (j % k >= k-t):
+                    zero[i,j] = 1
+
+        patt = zero
+
+        # smooth edges for low res
+        patt = ndimage.gaussian_filter(patt, sigma = 0.5)
+
+
+    #print(patt.shape[0]**2)
 
     # return generated pattern image
     return patt
