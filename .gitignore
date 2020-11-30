@@ -18,3 +18,9 @@
 
 # data directory
 data/**
+
+# archive directory
+**/archive
+
+# temp hide docs directory
+docs
